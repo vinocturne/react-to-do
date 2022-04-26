@@ -50,7 +50,7 @@ function ToDoList() {
 
     return (
         <Container>
-            <Title>📑 To Dos</Title>
+            <Title>📝 To Dos</Title>
             <hr />
             <CreateContainer>
                 <FormControl sx={{ m: 1 }} variant="standard">
