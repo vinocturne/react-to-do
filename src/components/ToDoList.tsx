@@ -1,23 +1,30 @@
-import { useRecoilValue } from "recoil";
-import { toDoState } from "../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Categories, categoryState, toDoSelector } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
 function ToDoList() {
-    const toDos = useRecoilValue(toDoState);
-    console.log(toDos);
+    const toDos = useRecoilValue(toDoSelector);
+    const [category, setCategory] = useRecoilState(categoryState);
+    const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
+        //타입스크립트는 option의 value가 categories 타입이라는 것을 모르고
+        //string으로만 받아들이기 때문에 as any를 통해 모든 값이 들어갈 수 있도록 해주면 된다.
+        setCategory(event.currentTarget.value as any);
+    };
+    console.log(category);
     return (
         <div>
             <h1 style={{ color: "white" }}>To Dos</h1>
             <hr />
+            <select value={category} onInput={onInput}>
+                <option value={Categories.TO_DO}>To Do</option>
+                <option value={Categories.DOING}>Doing</option>
+                <option value={Categories.DONE}>Done</option>
+            </select>
             <CreateToDo />
-            <ul style={{ color: "white" }}>
-                {toDos.map((toDo) => (
-                    // <ToDo text={toDo.text} category={toDo.category} id={toDo.id} />
-                    // 위처럼 모든 프로퍼티를 넘기는 것 보다 아래와 같이 ...을 활용하여 한번에 옮기는 것이 편하고 보기 좋다.
-                    <ToDo key={toDo.id} {...toDo} />
-                ))}
-            </ul>
+            {toDos?.map((toDo) => (
+                <ToDo key={toDo.id} {...toDo} />
+            ))}
         </div>
     );
 }
